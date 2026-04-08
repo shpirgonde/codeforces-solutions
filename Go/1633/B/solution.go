@@ -1,4 +1,4 @@
-// Author: Shivshankar Pirgonde
+// Author: Shivshankar Pirgonde.
 // Adapted from online resources (Google, ChatGPT) and rewritten for learning.
 
 package main
