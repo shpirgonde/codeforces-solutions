@@ -2,7 +2,6 @@
 // Adapted from online resources (Google, ChatGPT) and rewritten for learning.
 
 #include <stdio.h>
-#include <string.h>
 
 int main()
 {
