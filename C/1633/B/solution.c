@@ -1,5 +1,5 @@
 // Author: Shivshankar Pirgonde
-// Adapted from online resources (Google, ChatGPT) and rewritten for learning.
+// Adapted from online resources and rewritten for learning.
 
 #include <stdio.h>
 
