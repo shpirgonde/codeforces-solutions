@@ -4,102 +4,121 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAXN 105 // Max no. of strings
-#define MAXM 55  // Max length of each string
+#define MAXN 105 // Max no. of input strings.
+#define MAXM 55  // Max length of each input string.
+
+// Function Prototypes
+void reverseString(char str[], int len);
+void checkReverse(const char s1[], const char s2[], int m);
+void solve(int n, int m, char inputString[MAXN][MAXM]);
 
 int main()
 {
+
+    // n = No. of strings entered.
+    // m = Exact length of each entered string .
+
     int n, m;
+
     scanf("%d %d", &n, &m);
 
     char inputString[MAXN][MAXM];
-    int used[MAXN] = {0};
 
     for (int i = 0; i < n; i++)
     {
         scanf("%s", inputString[i]);
     }
 
-    char left[MAXN][MAXM];
-    int leftCount = 0;
+    solve(n, m, inputString);
 
-    char middle[MAXM] = "";
-    int hasMiddle = 0;
+    return 0;
+}
 
+// Helper Funtion to reverse a string (Pass by Reference)
+void reverseString(char str[], int len)
+{
+    for (int l = 0, r = len - 1; l < r; l++, r--)
+    {
+        char temp = str[l];
+        str[l] = str[r];
+        str[r] = temp;
+    }
+}
+
+// check if two strings are reverse of each other
+int isReverse(const char s1[], const char s2[], int m)
+{
+    for (int i = 0; i < m; i++)
+    {
+        if (s1[i] != s2[m - 1 - i])
+            return 0;
+    }
+    return 1;
+}
+
+// check if string is a pallindrome
+int isPallindrome(const char s[], int m)
+{
+    for (int l = 0, r = m - 1; l < r; l++, r--)
+    {
+        if (s[l] != s[r])
+            return 0;
+    }
+    return 1;
+}
+
+// Function to solve the problem
+void solve(int n, int m, char inputString[MAXN][MAXM])
+{
+    int used[MAXN] = {0};
+    int leftIndices[MAXN], leftCount = 0;
+    int middleIndex = -1;
+
+    // 1.Identify reverse pairs and middle pallindrome
     for (int i = 0; i < n; i++)
     {
         if (used[i])
             continue;
 
-        char rev[MAXM];
-        strcpy(rev, inputString[i]);
-
-        // reverse a string
-        for (int l = 0, r = m - 1; l < r; l++, r--)
+        // Try to find matching reverse pair for the left side
+        int foundPair = 0;
+        for (int j = i + 1; j < n; j++)
         {
-            char temp = rev[l];
-            rev[l] = rev[r];
-            rev[r] = temp;
-        }
-
-        if (strcmp(inputString[i], rev) == 0)
-        {
-            // self Palindrom for Middle
-            if (!hasMiddle)
+            if (!used[j] && isReverse(inputString[i], inputString[j], m))
             {
-                strcpy(middle, inputString[i]);
-                hasMiddle = 1;
-                used[i] = 1;
+                leftIndices[leftCount++] = i;
+                used[i] = used[j] = 1;
+                foundPair = 1;
+                break;
             }
         }
 
-        // find reverse pair from remaining strings
-        else
+        // If no reverse pair, check if it's a candidate for the middle
+        if (!foundPair && middleIndex == -1 && isPallindrome(inputString[i], m))
         {
-            for (int j = i + 1; j < n; j++)
-            {
-                if (!used[j] && strcmp(inputString[j], rev) == 0)
-                {
-                    strcpy(left[leftCount++], inputString[i]);
-                    used[i] = used[j] = 1;
-                    break;
-                }
-            }
+            middleIndex = i;
+            used[i] = 1;
         }
     }
 
-    // Build result
-    char result[10000] = "";
+    // 2.Output the result directly
 
-    // left part
+    int totalLen = (leftCount * 2 * m) + (middleIndex != -1 ? m : 0);
+    printf("%d\n", totalLen);
+
     for (int i = 0; i < leftCount; i++)
-    {
-        strcat(result, left[i]);
-    }
+        printf("%s", inputString[leftIndices[i]]);
 
-    // middle
-    if (hasMiddle)
-    {
-        strcat(result, middle);
-    }
+    if (middleIndex != -1)
+        printf("%s", inputString[middleIndex]);
 
-    // right part (start from last string of left + reverse the string)
     for (int i = leftCount - 1; i >= 0; i--)
     {
-        char rev[MAXM];
-        strcpy(rev, left[i]);
-
-        for (int l = 0, r = m - 1; l < r; l++, r--)
-        {
-            char temp = rev[l];
-            rev[l] = rev[r];
-            rev[r] = temp;
-        }
-        strcat(result, rev);
+        char temp[MAXM];
+        strcpy(temp, inputString[leftIndices[i]]);
+        reverseString(temp, m);
+        printf("%s", temp);
     }
 
-    printf("%d\n", (int)strlen(result));
-    printf("%s\n", result);
-
-    return 0;
+    printf("\n");
 }
