@@ -1,14 +1,14 @@
 // Author: Shivshankar Pirgonde
-// Adapted from online resources and rewritten for learning.
 
 #include <stdio.h>
 
 void solve(char s[])
 {
     int zeros = 0, ones = 0;
-    for (int i = 0; s[i] != '\0'; i++)
+
+    for (char *p = s; *p != '\0'; p++)
     {
-        if (s[i] == '0')
+        if (*p == '0')
             zeros++;
         else
             ones++;
@@ -24,12 +24,14 @@ void solve(char s[])
 
 int main()
 {
+    char s[200005]; 
     int t;
+
     scanf("%d", &t);
 
     while (t--)
     {
-        char s[200005];
+
         scanf("%s", s);
         solve(s);
     }

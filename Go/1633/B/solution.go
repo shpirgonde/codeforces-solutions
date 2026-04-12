@@ -1,5 +1,4 @@
 // Author: Shivshankar Pirgonde
-// Adapted from online resources (Google, ChatGPT) and rewritten for learning.
 
 package main
 
@@ -7,42 +6,57 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
-func solve(s string) {
+func solve(w *bufio.Writer, s []byte) {
 	zeros, ones := 0, 0
 
-	for _, char := range s {
-		if char == '0' {
+	for _, b := range s {
+		if b == '0' {
 			zeros++
 		} else {
 			ones++
 		}
 	}
 
-	if zeros != ones {
-		if zeros < ones {
-			fmt.Println(zeros)
-		} else {
-			fmt.Println(ones)
-		}
-	} else {
-		fmt.Println(zeros - 1)
+	ans := zeros
+
+	if ones < zeros {
+		ans = ones
 	}
+	if zeros == ones {
+		ans--
+	}
+
+	fmt.Fprintln(w, ans)
 
 }
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
 
-	var t int
-	fmt.Fscan(reader, &t)
+	const maxCap = 200005
 
-	for i := 0; i < t; i++ {
-		var s string
-		fmt.Fscan(reader, &s)
+	sc := bufio.NewScanner(os.Stdin)
 
-		solve(s)
+	buf := make([]byte, maxCap)
+	sc.Buffer(buf, maxCap)
+
+	out := bufio.NewWriter(os.Stdout)
+	defer out.Flush()
+
+	//Read test input using	strconv method
+	if !sc.Scan() {
+		return
 	}
 
+	t, _ := strconv.Atoi(sc.Text())
+
+	for i := 0; i < t; i++ {
+		if !sc.Scan() {
+			break
+		}
+
+		solve(out, sc.Bytes())
+	}
 }
