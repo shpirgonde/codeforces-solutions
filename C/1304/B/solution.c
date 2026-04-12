@@ -1,5 +1,4 @@
 // Author: Shivshankar Pirgonde
-// Adapted from online resources and rewritten for learning.
 
 #include <stdio.h>
 #include <string.h>
